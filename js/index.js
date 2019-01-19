@@ -20,34 +20,6 @@ var linemat = new THREE.LineBasicMaterial({color: 0xff00ff, linewidth: 1});
 var line = new THREE.Line(linegeo, linemat);
 scene.add(line);
 
-// var line1geo = new THREE.Geometry();
-// line1geo.vertices.push(new THREE.Vector3(1, 1, z));
-// line1geo.vertices.push(new THREE.Vector3(1, 1, z+10));
-// var line1mat = new THREE.LineBasicMaterial({color: 0xff00ff, linewidth: 1});
-// var line1 = new THREE.Line(line1geo, line1mat);
-// scene.add(line1);
-
-// var line2geo = new THREE.Geometry();
-// line2geo.vertices.push(new THREE.Vector3(-1, -1, z));
-// line2geo.vertices.push(new THREE.Vector3(-1, -1, z+10));
-// var line2mat = new THREE.LineBasicMaterial({color: 0xff00ff, linewidth: 1});
-// var line2 = new THREE.Line(line2geo, line2mat);
-// scene.add(line2);
-
-// var line3geo = new THREE.Geometry();
-// line3geo.vertices.push(new THREE.Vector3(-1, 1, z));
-// line3geo.vertices.push(new THREE.Vector3(-1, 1, z+10));
-// var line3mat = new THREE.LineBasicMaterial({color: 0xff00ff, linewidth: 1});
-// var line3 = new THREE.Line(line3geo, line3mat);
-// scene.add(line3);
-
-// var line4geo = new THREE.Geometry();
-// line4geo.vertices.push(new THREE.Vector3(1, -1, z));
-// line4geo.vertices.push(new THREE.Vector3(1, -1, z+10));
-// var line4mat = new THREE.LineBasicMaterial({color: 0xff00ff, linewidth: 1});
-// var line4 = new THREE.Line(line4geo, line4mat);
-// scene.add(line4);
-
 var lines1 = [[1, 1], [-1, 1], [-1, -1], [1, -1]].map((e, i) => {
     let lineGeometry = new THREE.Geometry();
     lineGeometry.vertices.push(new THREE.Vector3(e[0], e[1], z));
@@ -93,10 +65,12 @@ var animate = function () {
     // camera.position.z -= 0.01;
 
     if (button === 'w') {
-        camera.position.z -= 0.2;
+        camera.position.z -= 0.04;
     } else if (button === 's') {
-        camera.position.z += 0.2;
+        camera.position.z += 0.04;
     }
+
+    camera.position.z -= 0.01;
 
 		renderer.render( scene, camera );
 };
