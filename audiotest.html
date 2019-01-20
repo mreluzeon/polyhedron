@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+</head>
+<body>
+	<script src="./js/utils.js"></script>
+	<script>
+		const a = document.createElement("audio");
+		a.crossOrigin = "anonymous";
+		a.src = "https://api.soundcloud.com/tracks/158520744/stream?client_id=56c4f3443da0d6ce6dcb60ba341c4e8d";
+		analyser = getAudioAnalyser(a);
+		setInterval(() => {document.querySelector("body").style.backgroundColor = "hsl(180, 100%, " + Math.floor(getBeatValue(analyser) / 1.75) + "%)";}, 0);
+	</script>
+</body>
+</html>
