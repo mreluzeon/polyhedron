@@ -86,9 +86,9 @@ var animate = function () {
         camera.position.z -= 0.04;
     } else if (button === 's') {
         camera.position.z += 0.04;
-    } else if (button === 'a') {
+    } else if (button === 'lajfl') {
         camera.position.x -= 0.04;
-    } else if (button === 'd') {
+    } else if (button === 'asdasf') {
         camera.position.x += 0.04;
     } else if (button === '/') {
         doors[0][3] = 0.1;
@@ -141,7 +141,7 @@ var animate = function () {
 
     camera.position.z -= camvel;
 
-    camvel = (-z / 5) * 0.01;
+    camvel = (-z / 5) * 0.005;
 
     if (camera.position.z-0.1 <= doors[0][0].position.z && doors[0][0].position.y == 0.5) {
         // document.querySelector("body").removeChild(document.querySelector("body").children[4]);
