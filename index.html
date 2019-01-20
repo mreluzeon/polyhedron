@@ -4,9 +4,19 @@
 		    <style>
 			   body { margin: 0; }
 			   canvas { width: 100%; height: 100% }
+         #info {
+	           position: absolute;
+	           top: 10px;
+	           width: 100%;
+	           text-align: center;
+	           z-index: 100;
+	           display:block;
+             color: white;
+         }
 		    </style>
 	  </head>
 	  <body>
+        <div id="info"><h1 id="score">0</h1></div>
 		    <script src="./js/three.js"></script>
 		    <script src="./js/index.js">
 		    </script>
