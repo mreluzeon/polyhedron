@@ -17,14 +17,30 @@
              position: absolute;
              visibility: hidden;
              top: 40%;
-             left: 40%;
+             left: 45%;
+             color: white;
+             font-family: courier new, monospace;
+         }
+         .code {
+             position: absolute;
+             top: 90%;
+             left: 1%;
+             color: white;
+             font-size: 36px;
          }
 		    </style>
 	  </head>
 	  <body>
-        <div id="gameover"><h1>Game</h1><br/><h1>Over</h1></div>
+        <div id="gameover"><h1>G A M E</h1><br/><h1>O V E R</h1></div>
         <div id="info"><h1 id="score">0</h1></div>
+        <div class="code">
+            <center>
+            <span id="codeTyped">A</span>
+            <span id="codeToType">AA</span>
+            </center>
+        </div>
 		    <script src="./js/three.js"></script>
+        <script src="./js/config.js"></script>
         <script src="./js/utils.js"></script>
 		    <script src="./js/index.js">
 		    </script>

@@ -1,10 +1,13 @@
-var text;
 var button = '';
 var z = 0;
 var vel = 0;
-var camvel = 0.01;
+var camvel = 0.001;
 var doors = [];
-var code = "poiui".split('');
+var codeToType = getRandomCode(0);
+var codeTyped = [];
+
+document.querySelector("#codeToType").innerText = codeToType.join('');
+document.querySelector("#codeTyped").innerText = codeTyped.join('');
 
 var loader = new THREE.FontLoader();
 var scene = new THREE.Scene();
@@ -31,6 +34,7 @@ function drawSquare(z){
         let lineMaterial = new THREE.LineBasicMaterial({color: 0xff00ff, linewidth: 1});
         let line = new THREE.Line(lineGeometry, lineMaterial);
         scene.add(line);
+        return line;
     });
 
     let doorUpGeometry = new THREE.BoxGeometry(2, 1, 0.01);
@@ -54,7 +58,7 @@ function drawSquare(z){
     doorDown.position.z = z;
     scene.add(doorDown);
 
-    doors.push([doorUp, doorDown, doorLine, 0]);
+    doors.push([doorUp, doorDown, doorLine, 0, lines]);
     return 0;
 }
 
@@ -68,7 +72,7 @@ document.onkeyup = (e) => {
 
 var animate = function () {
 
-    if (button === 'w') {
+    if (button === '-') {
         camera.position.z -= 0.04;
     } else if (button === 's') {
         camera.position.z += 0.04;
@@ -76,19 +80,22 @@ var animate = function () {
         camera.position.x -= 0.04;
     } else if (button === 'd') {
         camera.position.x += 0.04;
-    } else if (button === 'z') {
+    } else if (button === '/') {
         doors[0][3] = 0.1;
         doors[0][2].visible = false;
         button = '';
-    } else if (code[0] === button){
-        code.shift();
+    } else if (codeToType[0] === REAL_BUTTON[button]) {
+        codeTyped.unshift(codeToType.shift());
         console.log(code);
         button = '';
         if (code.length === 0) {
             doors[0][3] = 0.1;
             doors[0][2].visible = false;
-            code = ['p', 'o', 'i', 'u', 'i'];
+            codeToType = getRandomCode(-z/5);
+            codeTyped = [];
         }
+        document.querySelector("#codeToType").innerText = codeToType.join('');
+        document.querySelector("#codeTyped").innerText = codeTyped.reverse().join('');
     }
 
     doors = doors.filter((e, i) => {
@@ -96,25 +103,39 @@ var animate = function () {
         e[1].position.y -= e[3];
         if(e[0].position.y > 1.30){
             console.log(doors);
+            scene.remove(scene.getObjectById(doors[0][0].id));
+            scene.remove(scene.getObjectById(doors[0][1].id));
+            scene.remove(scene.getObjectById(doors[0][2].id));
+            scene.remove(scene.getObjectById(doors[0][4][0].id));
+            scene.remove(scene.getObjectById(doors[0][4][1].id));
+            scene.remove(scene.getObjectById(doors[0][4][2].id));
+            scene.remove(scene.getObjectById(doors[0][4][3].id));
             return false;
         }
         return true;
     });
 
-    if(doors.length < 2) {
+    if(doors.length < 1) {
         z -= 5;
-        document.querySelector("#score").innerText = (-z/5)-2;
+        document.querySelector("#score").innerText = "score: " + ((-z/5)-1 + "");
         drawSquare(z);
     }
 
-    camera.position.z -= camvel;
+    //camera.position.z -= camvel;
 
-    camvel = (-z / 5) * 0.005;
+    //camvel = (-z / 5) * 0.02;
 
     if (camera.position.z-0.1 <= doors[0][0].position.z && doors[0][0].position.y == 0.5) {
         // document.querySelector("body").removeChild(document.querySelector("body").children[4]);
         document.querySelector("#gameover").style.visibility = "visible";
         return;
+    }
+
+    if (doors[0][0].position.z - 1> camera.position.z) {
+        scene.remove(scene.getObjectById(doors[0][0].id));
+        scene.remove(scene.getObjectById(doors[0][1].id));
+        scene.remove(scene.getObjectById(doors[0][2].id));
+        scene.remove(scene.getObjectById(doors[0][0].id));
     }
 
 		renderer.render( scene, camera );
