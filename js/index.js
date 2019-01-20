@@ -2,7 +2,9 @@ var text;
 var button = '';
 var z = 0;
 var vel = 0;
+var camvel = 0.01;
 var doors = [];
+var code = "poiui".split('');
 
 var loader = new THREE.FontLoader();
 var scene = new THREE.Scene();
@@ -38,6 +40,13 @@ function drawSquare(z){
     doorUp.position.z = z;
     scene.add(doorUp);
 
+    let doorLineGeometry = new THREE.Geometry();
+    doorLineGeometry.vertices.push(new THREE.Vector3(1, 0, z+0.01));
+    doorLineGeometry.vertices.push(new THREE.Vector3(-1, 0, z+0.01));
+    let doorLineMesh = new THREE.LineBasicMaterial({color: 0x000000, linewidth: 1});
+    let doorLine = new THREE.Line(doorLineGeometry, doorLineMesh);
+    scene.add(doorLine);
+
     let doorDownGeometry = new THREE.BoxGeometry(2, 1, 0.01);
     let doorDownMaterial = new THREE.MeshBasicMaterial({color: 0xff00ff, side: THREE.DoubleSide});
     let doorDown = new THREE.Mesh(doorDownGeometry, doorDownMaterial);
@@ -45,67 +54,10 @@ function drawSquare(z){
     doorDown.position.z = z;
     scene.add(doorDown);
 
-    doors.push([doorUp, doorDown, 0]);
+    doors.push([doorUp, doorDown, doorLine, 0]);
     return 0;
 }
 
-// var linegeo = new THREE.Geometry();
-// linegeo.vertices.push(new THREE.Vector3(1, 1, z));
-// linegeo.vertices.push(new THREE.Vector3(1, -1, z));
-// linegeo.vertices.push(new THREE.Vector3(-1, -1, z));
-// linegeo.vertices.push(new THREE.Vector3(-1, 1, z));
-// linegeo.vertices.push(new THREE.Vector3(1, 1, z));
-// var linemat = new THREE.LineBasicMaterial({color: 0xff00ff, linewidth: 1});
-// var line = new THREE.Line(linegeo, linemat);
-// scene.add(line);
-
-// var doorUpGeometry = new THREE.PlaneGeometry(1, 1, 1);
-// var doorUpMaterial = new THREE.MeshBasicMaterial( {color: 0xff00ff, side: THREE.DoubleSide} );
-// var doorUp = new THREE.Mesh( doorUpGeometry, doorUpMaterial );
-// doorUp.position.z = 0;
-// scene.add(doorUp);
-
-// var doorUpGeometry = new THREE.BoxGeometry(2, 1, 0.01);
-// var doorUpMaterial = new THREE.MeshBasicMaterial({color: 0xff00ff, side: THREE.DoubleSide});
-// var doorUp = new THREE.Mesh(doorUpGeometry, doorUpMaterial);
-// doorUp.position.y = 0.5;
-// scene.add(doorUp);
-
-// var doorDownGeometry = new THREE.BoxGeometry(2, 1, 0.01);
-// var doorDownMaterial = new THREE.MeshBasicMaterial({color: 0xff00ff, side: THREE.DoubleSide});
-// var doorDown = new THREE.Mesh(doorDownGeometry, doorDownMaterial);
-// doorDown.position.y = -0.5;
-// scene.add(doorDown);
-
-// var lines1 = [[1, 1], [-1, 1], [-1, -1], [1, -1]].map((e, i) => {
-//     let lineGeometry = new THREE.Geometry();
-//     lineGeometry.vertices.push(new THREE.Vector3(e[0], e[1], z));
-//     lineGeometry.vertices.push(new THREE.Vector3(e[0], e[1], z+5));
-//     let lineMaterial = new THREE.LineBasicMaterial({color: 0xff00ff, linewidth: 1});
-//     let line = new THREE.Line(lineGeometry, lineMaterial);
-//     scene.add(line);
-// });
-
-// var linegeo2 = new THREE.Geometry();
-// linegeo2.vertices.push(new THREE.Vector3(1, 1, z-5));
-// linegeo2.vertices.push(new THREE.Vector3(1, -1, z-5));
-// linegeo2.vertices.push(new THREE.Vector3(-1, -1, z-5));
-// linegeo2.vertices.push(new THREE.Vector3(-1, 1, z-5));
-// linegeo2.vertices.push(new THREE.Vector3(1, 1, z-5));
-// var linemat2 = new THREE.LineBasicMaterial({color: 0xfa8310, linewidth: 1});
-// var line2 = new THREE.Line(linegeo2, linemat2);
-// scene.add(line2);
-
-// var lines2 = [[1, 1], [-1, 1], [-1, -1], [1, -1]].map((e, i) => {
-//     let lineGeometry = new THREE.Geometry();
-//     lineGeometry.vertices.push(new THREE.Vector3(e[0], e[1], z-5));
-//     lineGeometry.vertices.push(new THREE.Vector3(e[0], e[1], z));
-//     let lineMaterial = new THREE.LineBasicMaterial({color: 0xfa8310, linewidth: 1});
-//     let line = new THREE.Line(lineGeometry, lineMaterial);
-//     scene.add(line);
-// });
-
-camera.position.z = 5;
 document.onkeydown = (e) => {
     button = e.key;
 };
@@ -116,10 +68,6 @@ document.onkeyup = (e) => {
 
 var animate = function () {
 
-    // z -= 0.001;
-
-    // camera.position.z -= 0.01;
-
     if (button === 'w') {
         camera.position.z -= 0.04;
     } else if (button === 's') {
@@ -129,23 +77,44 @@ var animate = function () {
     } else if (button === 'd') {
         camera.position.x += 0.04;
     } else if (button === 'z') {
-        doors.pop();
-        doors[0][2] = 0.01;
+        doors[0][3] = 0.1;
+        doors[0][2].visible = false;
+        button = '';
+    } else if (code[0] === button){
+        code.shift();
+        console.log(code);
+        button = '';
+        if (code.length === 0) {
+            doors[0][3] = 0.1;
+            doors[0][2].visible = false;
+            code = ['p', 'o', 'i', 'u', 'i'];
+        }
     }
 
-    // doors.forEach((e, i) => {
-    //     e[0].position.y += e[2];
-    //     e[1].position.y -= e[2];
-    //     if(e[0].position.y > 2){
-    //         e[0]
-    //     }
-    // });
+    doors = doors.filter((e, i) => {
+        e[0].position.y += e[3];
+        e[1].position.y -= e[3];
+        if(e[0].position.y > 1.30){
+            console.log(doors);
+            return false;
+        }
+        return true;
+    });
 
-    //camera.position.z -= 0.01;
+    if(doors.length < 2) {
+        z -= 5;
+        document.querySelector("#score").innerText = (-z/5)-2;
+        drawSquare(z);
+    }
 
-    // if (camera.position.z-0.1 <= doorUp.position.z) {
-    //     return;
-    // }
+    camera.position.z -= camvel;
+
+    camvel = (-z / 5) * 0.005;
+
+    if (camera.position.z-0.1 <= doors[0][0].position.z && doors[0][0].position.y == 0.5) {
+        document.querySelector("body").removeChild(document.querySelector("body").children[3]);
+        return;
+    }
 
 		renderer.render( scene, camera );
 		requestAnimationFrame( animate );
