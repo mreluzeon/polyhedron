@@ -112,7 +112,8 @@ var animate = function () {
     camvel = (-z / 5) * 0.005;
 
     if (camera.position.z-0.1 <= doors[0][0].position.z && doors[0][0].position.y == 0.5) {
-        document.querySelector("body").removeChild(document.querySelector("body").children[3]);
+        // document.querySelector("body").removeChild(document.querySelector("body").children[4]);
+        document.querySelector("#gameover").style.visibility = "visible";
         return;
     }
 
