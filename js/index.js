@@ -1,4 +1,9 @@
 var text;
+var audio = document.createElement("audio");
+audio.crossOrigin = "anonymous";
+audio.src = "https://api.soundcloud.com/tracks/158520744/stream?client_id=56c4f3443da0d6ce6dcb60ba341c4e8d";
+analyser = getAudioAnalyser(audio);
+
 var button = '';
 var z = 0;
 var vel = 0;
@@ -14,7 +19,7 @@ var renderer = new THREE.WebGLRenderer();
 renderer.setSize( window.innerWidth, window.innerHeight );
 document.body.appendChild( renderer.domElement );
 
-function drawSquare(z){
+function drawSquare(z) {
     let linegeo = new THREE.Geometry();
     linegeo.vertices.push(new THREE.Vector3(1, 1, z));
     linegeo.vertices.push(new THREE.Vector3(1, -1, z));
@@ -24,11 +29,14 @@ function drawSquare(z){
     let linemat = new THREE.LineBasicMaterial({color: 0xff00ff, linewidth: 1});
     let line = new THREE.Line(linegeo, linemat);
     scene.add(line);
-    let lines = [[1, 1], [-1, 1], [-1, -1], [1, -1]].map((e, i) => {
+
+    let lines = [[1, 1, -1, 1], [-1, 1, -1, -1], [-1, -1, 1, -1], [1, -1, 1, 1]].map((e, i) => {
         let lineGeometry = new THREE.Geometry();
         lineGeometry.vertices.push(new THREE.Vector3(e[0], e[1], z));
         lineGeometry.vertices.push(new THREE.Vector3(e[0], e[1], z+5));
-        let lineMaterial = new THREE.LineBasicMaterial({color: 0xff00ff, linewidth: 1});
+        lineGeometry.vertices.push(new THREE.Vector3(e[2], e[3], z));
+        lineGeometry.vertices.push(new THREE.Vector3(e[2], e[3], z+5));
+        let lineMaterial = new THREE.MeshBasicMaterial({color: new THREE.color(`hsl(${getRandomHue()}, 100%, ${Math.floor(getBeatValue(analyzer) * .8)}%`), linewidth: 1, side: THREE.DoubleSide});
         let line = new THREE.Line(lineGeometry, lineMaterial);
         scene.add(line);
     });
@@ -117,7 +125,9 @@ var animate = function () {
         return;
     }
 
-		renderer.render( scene, camera );
-		requestAnimationFrame( animate );
+    renderer.render( scene, camera );
+    requestAnimationFrame( animate );
 };
+
+audio.play();
 animate();
