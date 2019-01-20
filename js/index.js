@@ -95,7 +95,7 @@ var animate = function () {
         doors[0][2].visible = false;
         button = '';
     } else if (codeToType[0] === REAL_BUTTON[button]) {
-        codeTyped.unshift(codeToType.shift());
+        codeTyped.push(codeToType.shift());
         console.log(code);
         button = '';
         if (code.length === 0) {
@@ -105,7 +105,7 @@ var animate = function () {
             codeTyped = [];
         }
         document.querySelector("#codeToType").innerText = codeToType.join('');
-        document.querySelector("#codeTyped").innerText = codeTyped.reverse().join('');
+        document.querySelector("#codeTyped").innerText = codeTyped.join('');
     }
 
     doors = doors.filter((e, i) => {
