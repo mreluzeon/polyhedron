@@ -2,10 +2,6 @@ function getRandomHue() {
 	return Math.floor(Math.random() * 360);
 }
 
-function getRandomHSLColor() {
-	return `hsl(${getRandomHue()}, 100%, 50%)`;
-}
-
 function getAudioAnalyser(audio) {
 	const contextClass = (window.AudioContext || 
 		window.webkitAudioContext || 
@@ -28,7 +24,7 @@ function getAudioAnalyser(audio) {
 }
 
 function getBeatValue(analyser) {
-	let data = new UInt8Array(analyser.frequencyBinCount);
+	let data = new Uint8Array(analyser.frequencyBinCount);
 	analyser.getByteFrequencyData(data);
 
 	let all = [];
@@ -39,4 +35,15 @@ function getBeatValue(analyser) {
 	let beat = (all.reduce((a, b) => a + b) / all.length).toFixed(1);
 
 	return beat;
+}
+
+function getRandomCode(score) {
+	codeLength = Math.floor(score * 0.2) + 3;
+	code = [];
+
+	for (let i = 0; i < codeLength; ++i) {
+		code.push("ABCDEF".split("")[Math.floor(Math.random() * 6)]);
+	}
+
+	return code;
 }
